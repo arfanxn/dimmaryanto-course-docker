@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+    nginx:
+        image: nginx:${NGINX_VERSION}
+        ports:
+            - 8080:80
+    db:
+        image: postgres:latest
+        ports:
+            - 5432:5432
+        environment:
+            - POSTGRES_DB
+        env_file:
+            - .env
+        volumes:
+            - pg_data:/var/lib/postgresql/data
+        networks:
+            - backend
+networks:
+    backend:
+volumes:
+    pg_data:
