@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+    webapp:
+        ports:
+            - "8080:80"
+        volumes:
+            - ./html:/usr/share/nginx/html
+    backend:
+        ports:
+            - "8081:80"
+        volumes:
+            - ./php:/var/www/html
+    db:
+        ports:
+            - "5432:5432"
+        environment:
+            - POSTGRES_PASSWORD=secretPassword
+            - POSTGRES_USER=example_user
+            - POSTGRES_DB=example_db

@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+    webapp:
+        build:
+            dockerfile: nginx.dockerfile
+            context: .
+            args:
+                NGINX_VERSION: latest
+        ports:
+            - "8080:80"
+    backend:
+        build:
+            dockerfile: php.dockerfile
+            context: .
+            args:
+                PHP_VERSION: latest
+    db:
+        environment:
+            - POSTGRES_PASSWORD=secretPassword
+            - POSTGRES_USER=user_prod
+            - POSTGRES_DB=prod_db

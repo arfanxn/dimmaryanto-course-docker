@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+    webapp:
+        image: nginx:latest
+        networks:
+            - frontend
+    backend:
+        image: php:latest
+        depends_on:
+            - db
+        networks:
+            - backend
+            - frontend
+    db:
+        image: postgres:latest
+        volumes:
+            - type: volume
+              source: pg_data
+              target: /var/lib/postgresql/data
+        networks:
+            - backend
+volumes:
+    pg_data:
+networks:
+    frontend:
+    backend:
