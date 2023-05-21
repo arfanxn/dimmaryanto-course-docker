@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+    backend:
+        image: php:latest
+        ports:
+            - "8080:80"
+        depends_on:
+            - db
+        networks:
+            - backend
+    db:
+        image: postgres:12.6
+        ports:
+            - "5432:5432"
+        environment:
+            - POSTGRES_PASSWORD
+            - POSTGRES_USER
+            - POSTGRES_DB
+        volumes:
+            - type: volume
+              source: pg_data
+              target: /var/lib/postgresql/data
+        networks:
+            - backend
+volumes:
+    pg_data:
+networks:
+    backend:

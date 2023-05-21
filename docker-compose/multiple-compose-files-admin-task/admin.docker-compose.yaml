@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+    migrate:
+        image: flyway/flyway:latest-alpine
+        environment:
+            - FLYWAY_EDITION
+        command:
+            [ 
+                "-user=${POSTGRES_USER}",
+                "-password=${POSTGRES_PASSWORD}",
+                "-url=jdbc:postgresql://db:5432/${POSTGRES_DB}",
+                "info",
+            ]
+        depends_on:
+            - db
+        networks:
+            - backend
