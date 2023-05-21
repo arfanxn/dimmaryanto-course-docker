@@ -1,0 +1,36 @@
+version: "3.9"
+services:
+    web:
+        image: nginx:latest
+        ports:
+            - "8080:80"
+        volumes:
+            - ./html:/usr/share/nginx/html
+        depends_on:
+            - postgres
+            - migrate-tools
+    postgres:
+        image: postgres:latest
+        ports:
+            - 5432:5432
+        environment:
+            - POSTGRES_PASSWORD
+            - POSTGRES_USER
+            - POSTGRES_DB
+        volumes:
+            - pg_data:/var/lib/postgresql/data
+     :
+        image: flyway/flyway:latest
+        environment:
+            - FLYWAY_EDITION
+        command:
+            [
+                "-user=${POSTGRES_USER}",
+                "-password=${POSTGRES_PASSWORD}",
+                "-url=jdbc:postgresql://postgres:5432/${POSTGRES_DB}",
+                "info",
+            ]
+        depends_on:
+            - postgres
+volumes:
+    pg_data: {}
