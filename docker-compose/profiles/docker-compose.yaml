@@ -1,0 +1,52 @@
+version: "3.9"
+services:
+    webapp:
+        image: nginx:latest
+        ports:
+            - 8080:80
+        profiles: ["frontend"]
+        depends_on:
+            - backend
+    backend:
+        image: php:latest
+        ports:
+            - 8081:80
+        depends_on:
+            - db
+    db:
+        image: mysql:latest
+        environment:
+            - MYSQL_ROOT_PASSWORD
+            - MYSQL_USER
+            - MYSQL_PASSWORD
+            - MYSQL_DATABASE
+        volumes:
+            - mysql_data:/var/lib/mysql
+    phpmyadmin:
+        image: phpmyadmin
+        profiles:
+            - debug
+            - frontend
+        ports:
+            - 33306:80
+        environment:
+            - MYSQL_ROOT_PASSWORD
+            - PMA_HOST=db
+        depends_on:
+            - db
+    migrate-tools:
+        image: flyway/flyway:latest
+        profiles: ["dev", "prod"]
+        environment:
+            - FLYWAY_EDITION
+        command:
+            [
+                "-user=${MYSQL_USER}",
+                "-password=${MYSQL_PASSWORD}",
+                "-url=jdbc:mysql://db:3306/${MYSQL_DATABASE}",
+                "info",
+            ]
+        depends_on:
+            - db
+volumes:
+    mysql_data:
