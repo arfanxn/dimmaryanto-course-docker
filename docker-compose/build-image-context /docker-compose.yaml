@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+    webapp:
+        image: arfanxn/my-webapp:latest
+        build:
+            context: ./dockerfiles
+            dockerfile: nginx.dockerfile
+        ports:
+            - "8080:80"

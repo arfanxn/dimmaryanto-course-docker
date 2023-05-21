@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+    webapp:
+        image: arfanxn/my-webapp:latest
+        build:
+            context: ./dockerfiles
+            dockerfile: nginx.dockerfile
+            args:
+                - "NGINX_VERSION=latest" # this should thrown an error if successful
+        ports:
+            - "8080:80"
