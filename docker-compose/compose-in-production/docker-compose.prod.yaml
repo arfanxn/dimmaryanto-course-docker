@@ -1,0 +1,37 @@
+version: "3.9"
+services:
+    webapp:
+        scale: 3
+        image: arfanxn/webapp:latest
+        build:
+            context: .
+            dockerfile: php.dockerfile
+        expose:
+            - 80
+        environment:
+            - DEBUG=false
+            - APP_ENV=production
+            - DB_HOST=192.168.88.100
+            - DB_PORT=5432
+            - DB_USER=${POSTGRES_USER}
+            - DB_NAME=${POSTGRES_DB}
+            - DB_PASSWD=${POSTGRES_PASSWORD}
+        restart: always
+        labels:
+            - "org.vendor.application.name=BackendAppName"
+            - "org.vendor.application.description=Web Service Description"
+        volumes:
+            - webapp_data:/var/www/html/storage
+    proxy:
+        image: arfanxn/proxy:latest
+        build:
+            context: .
+            dockerfile: proxy.dockerfile
+        restart: always
+        labels:
+            - "org.vendor.application.name=FrontendAppName"
+            - "org.vendor.application.description=Webapp Description"
+        ports:
+            - "30808:80"
+volumes:
+    webapp_data:

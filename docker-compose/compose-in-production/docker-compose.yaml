@@ -1,0 +1,24 @@
+version: "3.9"
+services:
+    webapp:
+        image: php:latest
+        networks:
+            - backend
+    proxy:
+        image: nginx:latest
+        environment:
+            - APPLICATION_PORT=80
+            - NGINX_ROOT_DOCUMENT=/usr/share/nginx/html
+            - BACKEND_HOST=webapp
+            - BACKEND_PORT=80
+            - BACKEND_CONTEXT_PATH=/
+        depends_on:
+            - webapp
+        networks:
+            - backend
+            - frontend
+volumes:
+    pg_data:
+networks:
+    backend:
+    frontend:
