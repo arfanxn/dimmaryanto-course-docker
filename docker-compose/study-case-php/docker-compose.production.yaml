@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+    webapp:
+        image: arfanxn/php-app:latest
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                - PHP_VERSION=8.0-apache
+        ports:
+            - "8080:80"
