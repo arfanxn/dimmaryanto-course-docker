@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+    dockerd:
+        image: docker:dind
+        entrypoint: ["dockerd-entrypoint.sh"]
+        privileged: true
+        expose:
+            - 2375/tcp
+        command:
+            - "--insecure-registry=192.168.88.50:8087"
+            - "--insecure-registry=192.168.88.50:8086"
+        volumes:
+            - docker_cert:/certs/ca
+            - docker_cert:/certs/client
+
+    docker:
+        image: docker:latest
+        environment:
+            DOCKER_HOST: tcp://dockerd:2375
+            DOCKER_DRIVER: overlay2
+            DOCKER_TLS_CERTDIR: ""
+        command:
+            ## it's mean run docker info
+            - info
+        depends_on:
+            - dockerd
+        volumes:
+            - docker_cert:/certs/client
+
+volumes:
+    docker_cert:
